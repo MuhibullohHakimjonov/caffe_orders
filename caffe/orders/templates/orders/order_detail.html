@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block main %}
+
+<div class="container">
+        <h2>Изменить статус заказа № {{ order.id }}</h2>
+        <form method="POST" action="{% url 'order_detail' order.id %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Изменить статус</button>
+        </form>
+    </div>
+{% endblock main %}

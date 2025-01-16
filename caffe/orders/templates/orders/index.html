@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block main %}
+        <!-- Service Start -->
+        <div class="container-xxl py-5">
+            <form method="get" class="mb-3">
+                <div class="form-group">
+                    <label for="search" class="form-label">Поиск:</label>
+                    <input
+                        type="text"
+                        name="search"
+                        id="search"
+                        class="form-control"
+                        placeholder="Поиск по номеру стола или статусу"
+                        value="{{ search_query }}">
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="status" class="form-label">Фильтровать по статусу:</label>
+                    <select name="status" id="status" class="form-select">
+                        <option value="">Все</option>
+                        <option value="в ожидании" {% if status_filter == "в ожидании" %}selected{% endif %}>В ожидании</option>
+                        <option value="готово" {% if status_filter == "готово" %}selected{% endif %}>Готово</option>
+                        <option value="оплачено" {% if status_filter == "оплачено" %}selected{% endif %}>Оплачено</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">Применить</button>
+            </form>
+            <div class="container">
+                <h1>Список заказов</h1>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Номер стола</th>
+                            <th>Блюда</th>
+                            <th>Общая стоимость</th>
+                            <th>Статус</th>
+                            <th>Изменить статус</th>
+                            <th>Удалить</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.table_number }}</td>
+                                <td>{{ order.items.all|join:", " }}</td>
+                                <td>{{ order.total_price }} сум</td>
+                                <td>
+                                    {% if order.status == 'pending' %}
+                                        <span class="status pending">В ожидании</span>
+                                    {% elif order.status == 'ready' %}
+                                        <span class="status ready">Готово</span>
+                                    {% elif order.status == 'paid' %}
+                                        <span class="status paid">Оплачено</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'order_detail' order.id %}" class="action-link">Изменить статус</a>
+                                </td>
+                                <td>
+                                    <form action="{% url 'delete_order' order.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Удалить</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <!-- Service End -->
+{% endblock main %}
+        
+
