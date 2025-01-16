@@ -25,5 +25,5 @@ Order Management System — это веб-приложение, предназн
 1. Клонируйте репозиторий:
 
 ```bash
-git clone https://github.com/yourusername/order-management-system.git
+git clone git@github.com:MuhibullohHakimjonov/caffe_orders.git
 cd caffe
